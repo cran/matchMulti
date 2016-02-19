@@ -1,0 +1,15 @@
+importFrom(mvtnorm, pmvnorm)
+importFrom(coin, wilcox_test, pvalue)
+importFrom(plyr, aaply, laply, ddply, colwise)
+importFrom(MASS, ginv)
+importFrom(rcbsubset, rcbsubset)
+importFrom(weights, wtd.t.test)
+importFrom(Hmisc, wtd.var)
+importFrom("stats", "as.formula", "cov", "fisher.test", "mahalanobis",
+             "model.matrix", "pnorm", "quantile", "uniroot", "var")
+
+export(balanceMulti, balanceTable, matchMulti,
+matchMultioutcome, matchMultisens)
+
+
+exportPattern("^[[:alpha:]]+")

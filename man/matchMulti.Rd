@@ -1,0 +1,126 @@
+\name{matchMulti}
+\alias{matchMulti}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+A function that performs multilevel matching. 
+}
+\description{
+This is the workhorse function in the package which matches groups and units within groups. For example, it will match both schools and students in schools, where
+the goal is to make units more comparable to estimate treatment effects.
+}
+\usage{
+matchMulti(data, treatment, school.id, match.students = TRUE,
+student.vars = NULL, school.fb = NULL, verbose = FALSE,
+student.penalty.qtile = 0.05, min.keep.pctg = 0.8, 
+school.penalty = NULL, save.first.stage = TRUE)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{data}{
+A data frame for use in matching.
+}
+  \item{treatment}{
+Name of covariate that defines treated and control groups.
+}
+  \item{school.id}{
+Identifier for groups (for example schools)
+}
+  \item{match.students}{
+Logical flag for whether units within groups should also be matched.  If set to \code{FALSE}, all units will be retained in both groups.
+}
+  \item{student.vars}{
+Names of student level covariates on which to measure balance.  School-level distances will be penalized when student mathces are imbalanced on these variables. In addition, when \code{match.students} is \code{TRUE}, students are matched on a distance computed from these covariates.
+}
+  \item{school.fb}{
+A list of discrete group-level covariates on which to enforce fine balance, i.e., ensure marginal distributions are balanced.  
+}
+  \item{verbose}{
+Logical flag for whether to give detailed ouptu.
+}
+  \item{student.penalty.qtile}{
+This helps exclude students if they are difficult to match. Default is 0.05, which implies that in the match we would prefer to exclude students 
+rather than match them at distances larger than this quantile of the overall student-student robust Mahalanobis distance distribution
+}
+  \item{min.keep.pctg}{
+Minimum percentage of students (from smaller school) to keep when matching students in each school pair.
+}
+  \item{school.penalty}{
+A penalty to remove groups (schools) in the group (school) match
+}
+  \item{save.first.stage}{
+Should first stage matches be saved.
+}
+}
+
+\details{
+	\code{matchMulti} first matches students (or other individual units) within each pairwise combination of schools (or other groups); based on these matches a distance matrix is generated for the schools.  Then schools are matched on this distance matrix and the student matches for the selected school pairs are combined into a single matched sample.
+	School covariates are not used to compute the distance matrix for schools (since it is generated from the student match).  Instead imbalances school covariates should be addressed through the\code{school.fb} argument, which encodes a refined covariate balance constraint. School covariates in \code{school.fb} should be given in order of priority for balance, since the matching algorithm optimally balances the interaction of the variables in the first list element, then attempts to further balance the interaction in the second element, and so on.  
+}
+
+\value{
+\item{raw}{The unmatched data before matching.}
+\item{matched}{The matched dataset of both units and groups. Outcome analysis and balance checks are peformed on this item.}
+\item{school.match}{Object with two parts. The first lists which treated groups (schools) are matched to which control groups. The second lists the population of groups used in the match.}
+\item{school.id}{Name of school identifier}
+\item{treatment}{Name of treatment variable}
+
+}
+
+\author{  Luke Keele, Penn State University, \email{ljk20@psu.edu}    Sam Pimentel, University of Pennsylvania, \email{spi@wharton.upenn.edu}}
+
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+See also \code{\link{matchMulti}}, \code{\link{matchMultisens}},  \code{\link{balanceMulti}}, \code{\link{matchMultioutcome}}, \code{\link{rematchSchools}}
+}
+\examples{
+
+# Load Catholic school data
+data(catholic_schools)
+
+student.cov <- c('minority','female','ses')
+
+# Check balance student balance before matching
+balanceTable(catholic_schools[c(student.cov,'sector')],  treatment = 'sector')
+
+#Match schools but not students within schools
+match.simple <- matchMulti(catholic_schools, treatment = 'sector',
+school.id = 'school', match.students = FALSE)
+
+#Check balance after matching - this checks both student and school balance
+balanceMulti(match.simple, student.cov = student.cov)
+
+#Estimate treatment effect
+output <- matchMultioutcome(match.simple, out.name = "mathach",
+schl_id_name = "school",  treat.name = "sector")
+
+# Perform sensitivity analysis using Rosenbaum bound -- increase Gamma to increase effect of
+# possible hidden confounder          
+matchMultisens(match.simple, out.name = "mathach",
+          schl_id_name = "school", 
+          treat.name = "sector", Gamma = 1.3)
+          
+\dontrun{
+# Now match both schools and students within schools          
+match.out <- matchMulti(catholic_schools, treatment = 'sector',
+school.id = 'school', match.students = TRUE, student.vars = student.cov)
+
+# Check balance again
+bal.tab <- balanceMulti(match.out, student.cov = student.cov)
+
+# Now match with fine balance constraints on whether the school is large 
+# or has a high percentage of minority students
+match.fb <- matchMulti(catholic_schools, treatment = 'sector', school.id = 'school', 
+match.students = TRUE, student.vars = student.cov, 
+school.fb = list(c('size_large'),c('size_large','minority_mean_large')))
+
+# Estimate treatment effects
+matchMultioutcome(match.fb, out.name = "mathach", schl_id_name = "school",  treat.name = "sector")
+
+#Check Balance
+balanceMulti(match.fb, student.cov = student.cov)
+}
+
+}
+
