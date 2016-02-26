@@ -1,5 +1,5 @@
 rematchSchools <-
-function(match.out, students, school.fb = NULL, verbose = FALSE, keep.target = NULL, school.penalty = NULL, tol = 1){
+function(match.out, students, school.fb = NULL, verbose = FALSE, keep.target = NULL, school.penalty = NULL, tol = 1e-3){
 
 	#Are school fine balance constraints nested appropriately?
 	if(!is.null(school.fb) && length(school.fb) > 1){
@@ -19,7 +19,7 @@ function(match.out, students, school.fb = NULL, verbose = FALSE, keep.target = N
 
 	########## REMATCH ###########	
 
-	school.match <- matchSchools(match.out$student.matches$schools.matrix, students, treatment, school.id, school.fb, school.penalty, verbose) 
+	school.match <- matchSchools(match.out$student.matches$schools.matrix, students, treatment, school.id, school.fb, school.penalty, verbose, tol = tol) 
 
 	#if keep.target is provided, iterate until we get a match that keeps (close to) the desired number of schools
 	if(!is.null(keep.target)) {
@@ -28,12 +28,13 @@ function(match.out, students, school.fb = NULL, verbose = FALSE, keep.target = N
 		STARTVAL <- 1000
 		MAXITER <- 1000
 		SCALE_FACTOR <- 10
+		STOPRULE <- 1
 		ubound <- Inf
 		lbound <- 0
 		cur <- school.penalty
 		if (is.null(cur)) {
 			cur <- STARTVAL	
-			school.match <- matchSchools(match.out$student.matches$schools.matrix, students, treatment, school.id, school.fb, penalty = cur, verbose) 
+			school.match <- matchSchools(match.out$student.matches$schools.matrix, students, treatment, school.id, school.fb, penalty = cur, verbose, tol = tol) 
 		} 
 		next.match <- school.match		
 		for (i in 1:MAXITER) {
@@ -56,8 +57,8 @@ function(match.out, students, school.fb = NULL, verbose = FALSE, keep.target = N
 					cur <- SCALE_FACTOR*cur
 				}
 			}
-			if(ubound - lbound < tol) break
-			next.match <- matchSchools(match.out$student.matches$schools.matrix, students, treatment, school.id, school.fb, cur, verbose) 
+			if(ubound - lbound < STOPRULE) break
+			next.match <- matchSchools(match.out$student.matches$schools.matrix, students, treatment, school.id, school.fb, cur, verbose,tol = tol) 
 		}
 		school.match <- next.match
 	}

@@ -8,7 +8,7 @@ Match Schools on Student-based Distance
 Takes in a school distance matrix created using information from the first-stage student match and matches schools optimally, potentially 
 }
 \usage{
-matchSchools(dmat, students, treatment, school.id, school.fb, penalty, verbose)
+matchSchools(dmat, students, treatment, school.id, school.fb, penalty, verbose, tol)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,6 +33,11 @@ matchSchools(dmat, students, treatment, school.id, school.fb, penalty, verbose)
   \item{verbose}{
 	a logical value indicating whether detailed output should be printed.
 }
+
+\item{tol}{
+	a numeric tolerance value for comparing distances.  It may need to be raised above the default when matching with many levels of refined balance.
+}
+
 }
 \details{
 	The \code{school.fb} argument encodes a refined covariate balance constraint: the matching algorithm optimally balances the interaction of the variables in the first list element, then attempts to further balance the interaction in the second element, and so on.  As such variables should be added in order of priority for balance.

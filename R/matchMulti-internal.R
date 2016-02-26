@@ -137,8 +137,8 @@ function(matchFrame, treatFrame, ctrlFrame, student.vars, treatment, largeval){
 
 matchSchools <-
 function(dmat, students, treatment, school.id,
- school.fb, penalty, verbose){
- 	DIST_TOLERANCE <- 1e-3
+ school.fb, penalty, verbose, tol){
+ 	#DIST_TOLERANCE <- 1e-3
 	balance.covs <- unique(c(unlist(school.fb)))
 	school.df <- students2schools(students, c(balance.covs, treatment), school.id)
 	
@@ -148,9 +148,9 @@ function(dmat, students, treatment, school.id,
 	school.df <- school.df[reord,,drop = FALSE]
 	
 	if(is.null(school.fb)){
-		match.out <- rcbsubset(dmat, exclude.penalty = penalty, tol =  	DIST_TOLERANCE)
+		match.out <- rcbsubset(dmat, exclude.penalty = penalty, tol = tol) #	DIST_TOLERANCE)
 	} else {
-		match.out <- rcbsubset(dmat, fb.list = school.fb, treated.info = school.df[school.df[[treatment]] == 1,], control.info = school.df[school.df[[treatment]] == 0,], exclude.penalty = penalty, tol =  	DIST_TOLERANCE)
+		match.out <- rcbsubset(dmat, fb.list = school.fb, treated.info = school.df[school.df[[treatment]] == 1,], control.info = school.df[school.df[[treatment]] == 0,], exclude.penalty = penalty, tol = tol)# tol =  	DIST_TOLERANCE)
 	}
 	out.frame <- cbind('TreatID' = school.df[[school.id]][which(school.df[[treatment]] == 1)][as.numeric(rownames(match.out$matches))], 'CtrlID' = school.df[[school.id]][which(school.df[[treatment]] == 0)][match.out$matches])
 	

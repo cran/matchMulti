@@ -12,7 +12,7 @@ the goal is to make units more comparable to estimate treatment effects.
 matchMulti(data, treatment, school.id, match.students = TRUE,
 student.vars = NULL, school.fb = NULL, verbose = FALSE,
 student.penalty.qtile = 0.05, min.keep.pctg = 0.8, 
-school.penalty = NULL, save.first.stage = TRUE)
+school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -50,6 +50,11 @@ A penalty to remove groups (schools) in the group (school) match
   \item{save.first.stage}{
 Should first stage matches be saved.
 }
+
+\item{tol}{
+	a numeric tolerance value for comparing distances.  It may need to be raised above the default when matching with many levels of refined balance.
+}
+
 }
 
 \details{

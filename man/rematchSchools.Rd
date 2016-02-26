@@ -9,7 +9,7 @@ Repeat School Match Only
 }
 \usage{
 rematchSchools(match.out, students, school.fb = NULL, verbose = FALSE,
-keep.target = NULL, school.penalty = NULL, tol = 1)
+keep.target = NULL, school.penalty = NULL, tol = 1e-3)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,7 +34,7 @@ keep.target = NULL, school.penalty = NULL, tol = 1)
 }
 
 \item{tol}{
-	a numeric tolerance value controlling the maximum possible length of the search when \code{keep.target} is specified.
+	a numeric tolerance value for comparing distances.  It may need to be raised above the default when matching with many levels of refined balance.
 }
 }
 \details{

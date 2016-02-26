@@ -1,5 +1,5 @@
 matchMulti <-
-function(data, treatment, school.id, match.students = TRUE, student.vars = NULL, school.fb = NULL, verbose = FALSE, student.penalty.qtile = 0.05, min.keep.pctg = 0.8, school.penalty = NULL, save.first.stage = TRUE){
+function(data, treatment, school.id, match.students = TRUE, student.vars = NULL, school.fb = NULL, verbose = FALSE, student.penalty.qtile = 0.05, min.keep.pctg = 0.8, school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3){
 	
 	students <- data
 	##### Validate input #####
@@ -47,7 +47,7 @@ function(data, treatment, school.id, match.students = TRUE, student.vars = NULL,
 	#student matches in all school pairings	
 	student.matches <- matchStudents(students, treatment, school.id, match.students, student.vars, verbose, student.penalty.qtile, min.keep.pctg)
 
-	school.match <- matchSchools(student.matches$schools.matrix, students, treatment, school.id, school.fb, school.penalty, verbose) 
+	school.match <- matchSchools(student.matches$schools.matrix, students, treatment, school.id, school.fb, school.penalty, verbose, tol = tol) 
 
 
 	########### OUTPUT ###########
