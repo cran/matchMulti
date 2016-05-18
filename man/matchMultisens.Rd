@@ -53,7 +53,7 @@ See Also as \code{\link{matchMulti}}, \code{\link{matchMultioutcome}}
 
 
 \examples{
-
+\dontrun{
 # Load Catholic school data
 data(catholic_schools)
 
@@ -81,3 +81,4 @@ matchMultisens(match.simple, out.name = "mathach",
           treat.name = "sector", Gamma=1.3)
           
           }
+}          

@@ -56,6 +56,7 @@ Luke Keele, Penn State University, ljk20@psu.edu
 See Also as \code{\link{matchMulti}}, \code{\link{matchMultisens}}
 }
 \examples{
+	\dontrun{
 # Load Catholic school data
 data(catholic_schools)
 
@@ -76,7 +77,7 @@ output <- matchMultioutcome(match.simple, out.name = "mathach",
 schl_id_name = "school",  treat.name = "sector")
 
   }
-
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ outcomes }

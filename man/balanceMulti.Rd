@@ -45,6 +45,7 @@ the pooled standard deviation before matching, and p-values from parametric and 
 	\code{\link{matchMultioutcome}}, \code{\link{rematchSchools}}
 }
 \examples{
+	\dontrun{
 # Load Catholic school data
 data(catholic_schools)
 
@@ -59,8 +60,7 @@ school.id = 'school', match.students = FALSE)
 
 #Check balance after matching - this checks both student and school balance
 balanceMulti(match.simple, student.cov = student.cov)
-
-
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

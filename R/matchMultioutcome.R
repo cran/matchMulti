@@ -7,12 +7,12 @@ matchMultioutcome <- function(obj, out.name = NULL, schl_id_name = NULL, treat.n
    ci1 <- uniroot(ci_func, c(end.1, end.2), obj=obj, out.name = out.name,
           schl_id_name = schl_id_name, treat.name = treat.name, alternative="less", alpha=.025)$root;
           
-   ci2 <- uniroot(ci_func, c(end.1, end.2), obj=obj, out.name = "mathach",
-          schl_id_name = "school",  treat.name = "sector", alternative="great", alpha=.025)$root; 
+   ci2 <- uniroot(ci_func, c(end.1, end.2), obj=obj, out.name = out.name,
+          schl_id_name = schl_id_name,  treat.name = treat.name, alternative="great", alpha=.025)$root; 
           
-   pe <- uniroot(pe_func, c(end.1, end.2), obj=obj, out.name = "mathach",
-          schl_id_name = "school", 
-          treat.name = "sector")$root;   
+   pe <- uniroot(pe_func, c(end.1, end.2), obj=obj, out.name = out.name,
+          schl_id_name = schl_id_name, 
+          treat.name = treat.name)$root;   
           
    ci.lo <- min(ci1, ci2)
    ci.up <- max(ci1, ci2) 

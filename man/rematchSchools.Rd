@@ -62,7 +62,7 @@ keep.target = NULL, school.penalty = NULL, tol = 1e-3)
   Sam Pimentel, University of Pennsylvania, \email{spi@wharton.upenn.edu}
 }
 \examples{
-
+\dontrun{
 # Load Catholic school data
 data(catholic_schools)
 
@@ -79,6 +79,7 @@ balanceMulti(match.simple, student.cov = student.cov, school.cov = school.cov)
 #now rematch excluding 2 schools
 match.trimmed <- rematchSchools(match.simple, catholic_schools, keep.target = 13)
 match.trimmed$dropped$schools.t
+}
 }
 \seealso{
 	\code{\link{matchMulti}}.

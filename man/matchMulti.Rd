@@ -80,7 +80,7 @@ Should first stage matches be saved.
 See also \code{\link{matchMulti}}, \code{\link{matchMultisens}},  \code{\link{balanceMulti}}, \code{\link{matchMultioutcome}}, \code{\link{rematchSchools}}
 }
 \examples{
-
+\dontrun{
 # Load Catholic school data
 data(catholic_schools)
 
@@ -106,7 +106,7 @@ matchMultisens(match.simple, out.name = "mathach",
           schl_id_name = "school", 
           treat.name = "sector", Gamma = 1.3)
           
-\dontrun{
+
 # Now match both schools and students within schools          
 match.out <- matchMulti(catholic_schools, treatment = 'sector',
 school.id = 'school', match.students = TRUE, student.vars = student.cov)
@@ -125,6 +125,7 @@ matchMultioutcome(match.fb, out.name = "mathach", schl_id_name = "school",  trea
 
 #Check Balance
 balanceMulti(match.fb, student.cov = student.cov)
+
 }
 
 }
