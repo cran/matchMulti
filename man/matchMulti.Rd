@@ -10,7 +10,7 @@ the goal is to make units more comparable to estimate treatment effects.
 }
 \usage{
 matchMulti(data, treatment, school.id, match.students = TRUE,
-student.vars = NULL, school.fb = NULL, verbose = FALSE,
+student.vars = NULL, school.fb = NULL, verbose = FALSE, keep.target = NULL,
 student.penalty.qtile = 0.05, min.keep.pctg = 0.8, 
 school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3)
 }
@@ -35,8 +35,12 @@ Names of student level covariates on which to measure balance.  School-level dis
 A list of discrete group-level covariates on which to enforce fine balance, i.e., ensure marginal distributions are balanced.  
 }
   \item{verbose}{
-Logical flag for whether to give detailed ouptu.
+Logical flag for whether to give detailed output.
 }
+  \item{keep.target}{
+	an optional numeric value specifying the number of treated schools desired in the final match.  
+}
+
   \item{student.penalty.qtile}{
 This helps exclude students if they are difficult to match. Default is 0.05, which implies that in the match we would prefer to exclude students 
 rather than match them at distances larger than this quantile of the overall student-student robust Mahalanobis distance distribution

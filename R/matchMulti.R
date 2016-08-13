@@ -1,5 +1,5 @@
 matchMulti <-
-function(data, treatment, school.id, match.students = TRUE, student.vars = NULL, school.fb = NULL, verbose = FALSE, student.penalty.qtile = 0.05, min.keep.pctg = 0.8, school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3){
+function(data, treatment, school.id, match.students = TRUE, student.vars = NULL, school.fb = NULL, verbose = FALSE, keep.target = NULL, student.penalty.qtile = 0.05, min.keep.pctg = 0.8, school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3){
 	
 	students <- data
 	##### Validate input #####
@@ -48,6 +48,48 @@ function(data, treatment, school.id, match.students = TRUE, student.vars = NULL,
 	student.matches <- matchStudents(students, treatment, school.id, match.students, student.vars, verbose, student.penalty.qtile, min.keep.pctg)
 
 	school.match <- matchSchools(student.matches$schools.matrix, students, treatment, school.id, school.fb, school.penalty, verbose, tol = tol) 
+
+	#if keep.target is provided, iterate until we get a match that keeps (close to) the desired number of schools
+	if(!is.null(keep.target)) {
+		treat.schools <- unique(students[[school.id]][students[[treatment]] == 1])
+		if (keep.target <= 0 || keep.target > length(treat.schools) || keep.target %% 1 != 0) stop("keep.target must be a positive integer no greater than the total number of treated schools") 
+		STARTVAL <- 1000
+		MAXITER <- 1000
+		SCALE_FACTOR <- 10
+		STOPRULE <- 1
+		ubound <- Inf
+		lbound <- 0
+		cur <- school.penalty
+		if (is.null(cur)) {
+			cur <- STARTVAL	
+			school.match <- matchSchools(student.matches$schools.matrix, students, treatment, school.id, school.fb, penalty = cur, verbose, tol = tol) 
+		} 
+		next.match <- school.match		
+		for (i in 1:MAXITER) {
+			nkeep <- length(intersect(treat.schools, next.match[,1]))
+			if (nkeep == keep.target) {
+				if (verbose) print(paste('Iteration',i,': reached target number of schools with penalty of',cur))
+				break
+			}
+			if (nkeep > keep.target) {
+				if (verbose) print(paste('Iteration',i,': too many schools retained with penalty of',cur))			
+			ubound <- cur
+				cur <- lbound + (ubound - lbound)/2
+			}
+			if (nkeep < keep.target) {
+				if (verbose) print(paste('Iteration',i,': not enough schools retained with penalty of',cur))			
+				lbound <- cur
+				if (is.finite(ubound)) {
+					cur <- lbound + (ubound - lbound)/2
+				} else {
+					cur <- SCALE_FACTOR*cur
+				}
+			}
+			if(ubound - lbound < STOPRULE) break
+			next.match <- matchSchools(student.matches$schools.matrix, students, treatment, school.id, school.fb, cur, verbose,tol = tol) 
+		}
+		school.match <- next.match
+	}
 
 
 	########### OUTPUT ###########

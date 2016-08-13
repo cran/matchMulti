@@ -28,7 +28,9 @@ elastic <-
 function (mdist, n = 0, val = 0) {
     st <- max(as.numeric(c(rownames(mdist), colnames(mdist))))
     h <- matrix(val, dim(mdist)[1], n)
-    colnames(h) <- (st + 1):(st + n)
+    if(n > 0){
+	    colnames(h) <- (st + 1):(st + n)
+	}
     cbind(mdist, h)
 }
 
@@ -150,7 +152,7 @@ function(dmat, students, treatment, school.id,
 	if(is.null(school.fb)){
 		match.out <- rcbsubset(dmat, exclude.penalty = penalty, tol = tol) #	DIST_TOLERANCE)
 	} else {
-		match.out <- rcbsubset(dmat, fb.list = school.fb, treated.info = school.df[school.df[[treatment]] == 1,], control.info = school.df[school.df[[treatment]] == 0,], exclude.penalty = penalty, tol = tol)# tol =  	DIST_TOLERANCE)
+		match.out <- rcbsubset(dmat, fb.list = school.fb, treated.info = school.df[school.df[[treatment]] == 1,,drop = FALSE], control.info = school.df[school.df[[treatment]] == 0,,drop = FALSE], exclude.penalty = penalty, tol = tol)# tol =  	DIST_TOLERANCE)
 	}
 	out.frame <- cbind('TreatID' = school.df[[school.id]][which(school.df[[treatment]] == 1)][as.numeric(rownames(match.out$matches))], 'CtrlID' = school.df[[school.id]][which(school.df[[treatment]] == 0)][match.out$matches])
 	
@@ -182,9 +184,9 @@ function(students, treatment, school.id, match.students, student.vars, verbose, 
 	matches.list <- list()
 	for (i in 1:nt.schools) {
 		matches.list[[t.schools[i]]] <- list()
-		schli <- students[students[[school.id]] == t.schools[i],]
+		schli <- students[students[[school.id]] == t.schools[i],,drop = FALSE]
  		for (j in 1:nc.schools) {
-			schlj <- students[students[[school.id]] == c.schools[j],] 
+			schlj <- students[students[[school.id]] == c.schools[j],,drop = FALSE] 
 			if (match.students) {
 				#grab correct slice of maha distance
 				treat.idx <- c(students[[school.id]] == t.schools[i])[students[[treatment]] == 1]
@@ -192,7 +194,7 @@ function(students, treatment, school.id, match.students, student.vars, verbose, 
 				maha.slice <- maha.mat[which(treat.idx), which(ctrl.idx),drop = FALSE]
 				min.keep <- floor((1-min.keep.pctg)*min(dim(maha.slice)))
 				match.out <- pairmatchelastic(maha.slice, n = min.keep, val = student.penalty)
-				matches.list[[t.schools[i]]][[c.schools[j]]] <- rbind(schli[as.numeric(rownames(match.out)),], schlj[match.out,])
+				matches.list[[t.schools[i]]][[c.schools[j]]] <- rbind(schli[as.numeric(rownames(match.out)),,drop = FALSE], schlj[match.out,,drop = FALSE])
 			} else {
 				matches.list[[t.schools[i]]][[c.schools[j]]] <- rbind(schli,schlj)
 			}
