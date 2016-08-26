@@ -10,9 +10,9 @@ the goal is to make units more comparable to estimate treatment effects.
 }
 \usage{
 matchMulti(data, treatment, school.id, match.students = TRUE,
-student.vars = NULL, school.fb = NULL, verbose = FALSE, keep.target = NULL,
-student.penalty.qtile = 0.05, min.keep.pctg = 0.8, 
-school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3)
+student.vars = NULL, school.caliper = NULL, school.fb = NULL, 
+verbose = FALSE, keep.target = NULL, student.penalty.qtile = 0.05, 
+min.keep.pctg = 0.8, school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,6 +30,9 @@ Logical flag for whether units within groups should also be matched.  If set to 
 }
   \item{student.vars}{
 Names of student level covariates on which to measure balance.  School-level distances will be penalized when student mathces are imbalanced on these variables. In addition, when \code{match.students} is \code{TRUE}, students are matched on a distance computed from these covariates.
+}
+\item{school.caliper}{
+	matrix with one row for each treated school and one column for each control school, containing zeroes for pairings allowed by the caliper and \code{Inf} values for forbidden pairings.  When \code{NULL} no caliper is imposed.
 }
   \item{school.fb}{
 A list of discrete group-level covariates on which to enforce fine balance, i.e., ensure marginal distributions are balanced.  

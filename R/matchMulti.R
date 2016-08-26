@@ -1,5 +1,5 @@
 matchMulti <-
-function(data, treatment, school.id, match.students = TRUE, student.vars = NULL, school.fb = NULL, verbose = FALSE, keep.target = NULL, student.penalty.qtile = 0.05, min.keep.pctg = 0.8, school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3){
+function(data, treatment, school.id, match.students = TRUE, student.vars = NULL, school.caliper = NULL,  school.fb = NULL, verbose = FALSE, keep.target = NULL, student.penalty.qtile = 0.05, min.keep.pctg = 0.8, school.penalty = NULL, save.first.stage = TRUE, tol = 1e-3){
 	
 	students <- data
 	##### Validate input #####
@@ -20,6 +20,7 @@ function(data, treatment, school.id, match.students = TRUE, student.vars = NULL,
 		stop(paste('School variable', bad.vars,'not found\n'))
 	}	
 	
+
 	#do schools nest within treatment categories?
 	treat.tab <- table(students[[school.id]], students[[treatment]]) 
 	if(any(apply(treat.tab, 1, min) > 0)) {
@@ -45,7 +46,7 @@ function(data, treatment, school.id, match.students = TRUE, student.vars = NULL,
 	########### MATCHING ###########
 		
 	#student matches in all school pairings	
-	student.matches <- matchStudents(students, treatment, school.id, match.students, student.vars, verbose, student.penalty.qtile, min.keep.pctg)
+	student.matches <- matchStudents(students, treatment, school.id, match.students, student.vars,  school.caliper, verbose, student.penalty.qtile, min.keep.pctg)
 
 	school.match <- matchSchools(student.matches$schools.matrix, students, treatment, school.id, school.fb, school.penalty, verbose, tol = tol) 
 
@@ -82,6 +83,10 @@ function(data, treatment, school.id, match.students = TRUE, student.vars = NULL,
 				if (is.finite(ubound)) {
 					cur <- lbound + (ubound - lbound)/2
 				} else {
+					if(is.na(as.integer((SCALE_FACTOR^2)*cur))){
+						print('Cannot increase penalty further, terminating search')
+						break
+					}
 					cur <- SCALE_FACTOR*cur
 				}
 			}

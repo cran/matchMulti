@@ -141,6 +141,7 @@ matchSchools <-
 function(dmat, students, treatment, school.id,
  school.fb, penalty, verbose, tol){
  	#DIST_TOLERANCE <- 1e-3
+	
 	balance.covs <- unique(c(unlist(school.fb)))
 	school.df <- students2schools(students, c(balance.covs, treatment), school.id)
 	
@@ -148,7 +149,6 @@ function(dmat, students, treatment, school.id,
 	reord <- match(unlist(dimnames(dmat)), as.character(school.df[[school.id]]))
 	if (any(is.na(reord))) stop('matchSchools found schools not handled by matchStudents')
 	school.df <- school.df[reord,,drop = FALSE]
-	
 	if(is.null(school.fb)){
 		match.out <- rcbsubset(dmat, exclude.penalty = penalty, tol = tol) #	DIST_TOLERANCE)
 	} else {
@@ -160,7 +160,7 @@ function(dmat, students, treatment, school.id,
 }
 
 matchStudents <-
-function(students, treatment, school.id, match.students, student.vars, verbose, penalty.qtile, min.keep.pctg){	
+function(students, treatment, school.id, match.students, student.vars, school.caliper = NULL, verbose, penalty.qtile, min.keep.pctg){	
 	if(match.students){
 		X <- students[student.vars]
 		X <- handleNA(X, verbose = verbose)
@@ -201,8 +201,11 @@ function(students, treatment, school.id, match.students, student.vars, verbose, 
 			schoolmatch.mat[i,j] <- match2distance(matches.list[[t.schools[i]]][[c.schools[j]]], schli, schlj, student.vars, treatment, largeval = nrow(students)/2)
 		}
 	}
+	if(!is.null(school.caliper)) schoolmatch.mat <- schoolmatch.mat + school.caliper
+
 	rownames(schoolmatch.mat) <- t.schools
 	colnames(schoolmatch.mat) <- c.schools
+
 	return(list('student.matches' = matches.list, 'schools.matrix' = schoolmatch.mat))
 }
 
@@ -240,9 +243,14 @@ function(varname, treatment, orig.data, match.data = NULL, treat.wts = NULL, ctr
 	orig.v <- orig.data[,which(colnames(orig.data) == varname)]
 	m1 <- mean(treat.wts*orig.v[orig.data[[treatment]] == 1], na.rm = TRUE)
 	m0 <- mean(ctrl.wts*orig.v[orig.data[[treatment]] == 0], na.rm = TRUE)
+	
 	s1 <- sqrt(wtd.var(orig.v[orig.data[[treatment]] == 1], weights=treat.wts, na.rm= TRUE))
+	if(length(orig.v[orig.data[[treatment]] == 1]) == 1) s1 <- 0
 	s0 <- sqrt(wtd.var(orig.v[orig.data[[treatment]] == 0], weights=ctrl.wts, na.rm = TRUE))
-	if(is.null(match.data)) return(c('Treated Mean' = m1, 'Control Mean' = m0,'SDiff' = (m1 -m0)/sqrt(0.5*(s1^2 + s0^2))))
+	if(length(orig.v[orig.data[[treatment]] == 0]) == 1) s0 <- 0
+	sdiff.before <- (m1 -m0)/sqrt(0.5*(s1^2 + s0^2))
+	if(s1 == 0 && s0 == 0) sdiff.before <- ifelse(m1 == m0, 0, Inf)
+	if(is.null(match.data)) return(c('Treated Mean' = m1, 'Control Mean' = m0,'SDiff' = sdiff.before))
 		
 	#if match data is also provided
 	if(is.null(mc.wts)) mc.wts = rep(1, sum(match.data[[treatment]] == 0))
@@ -253,7 +261,10 @@ function(varname, treatment, orig.data, match.data = NULL, treat.wts = NULL, ctr
 	m1.m <- mean(mt.wts*match.v[match.data[[treatment]] == 1], na.rm= TRUE)
 	m0.m <- mean(mc.wts*match.v[match.data[[treatment]] == 0], na.rm = TRUE)	
 
-	return(c('Treated Mean Before' = m1, 'Control Mean Before' = m0,'SDiff Before' = (m1 -m0)/sqrt(0.5*(s1^2 + s0^2)), 'Treated Mean After' = m1.m, 'Control Mean After' = m0.m, 'SDiff After' = (m1.m - m0.m)/sqrt(0.5*(s1^2 + s0^2))))
+	sdiff.after <- (m1.m - m0.m)/sqrt(0.5*(s1^2 + s0^2))
+	if(s1 == 0 && s0 == 0) sdiff.after <- ifelse(m1.m == m0.m, 0, Inf)
+
+	return(c('Treated Mean Before' = m1, 'Control Mean Before' = m0,'SDiff Before' = sdiff.before, 'Treated Mean After' = m1.m, 'Control Mean After' = m0.m, 'SDiff After' = sdiff.after))
 }
 
 ## The original version of the following function was written by Paul Rosenbaum and distributed in the supplemental material to the paper: "Optimal Matching of an Optimally Chosen Subset in Observational Studies," Paul R. Rosenbaum, Journal of Computational and Graphical Statistics, Vol. 21, Iss. 1, 2012.

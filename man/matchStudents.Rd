@@ -9,7 +9,7 @@ Iterates over all possible treated-control school pairs, optionally computes and
 }
 \usage{
 matchStudents(students, treatment, school.id, match.students,
-student.vars, verbose, penalty.qtile, min.keep.pctg)
+student.vars, school.caliper = NULL, verbose, penalty.qtile, min.keep.pctg)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,6 +29,10 @@ student.vars, verbose, penalty.qtile, min.keep.pctg)
   \item{student.vars}{
  	column names of variables in \code{students} on which to match students and assess balance of student matches in evaluating match quality.
 }
+
+\item{school.caliper}{
+	matrix with one row for each treated school and one column for each control school, containing zeroes for pairings allowed by the caliper and \code{Inf} values for forbidden pairings.  When \code{NULL} no caliper is imposed.
+}
   \item{verbose}{
 	a logical value indicating whether detailed output should be printed.
 }
@@ -43,7 +47,12 @@ student.vars, verbose, penalty.qtile, min.keep.pctg)
 	The \code{penalty.qtile} and \code{min.keep.pctg} control the rate at which students are trimmed from the match.  If the quantile is high enough no students should be excluded in any match; if the quantile is very low the \code{min.keep.pctg} can still ensure a minimal sample size in each match.
 }
 \value{
-A list with one element for each treated school.  Each element is a list with one element for each control school, and each element of these secondary lists is a dataframe containing the matched sample for the corresponding treated-control pairing.
+A list with two elements:
+\item{student.matches}{ a list with one element for each treated school.  Each element is a list with one element for each control school, and each element of these secondary lists is a dataframe containing the matched sample for the corresponding treated-control pairing.
+}
+\item{schools.matrix}{
+	a matrix with one row for each treated school and one column for each control school, giving matching distances based on the student match.
+}
 }
 
 \author{
