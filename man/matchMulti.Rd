@@ -87,8 +87,29 @@ Should first stage matches be saved.
 See also \code{\link{matchMulti}}, \code{\link{matchMultisens}},  \code{\link{balanceMulti}}, \code{\link{matchMultioutcome}}, \code{\link{rematchSchools}}
 }
 \examples{
+	
+#toy example with short runtime
+library(matchMulti)
+
+#Load Catholic school data
+data(catholic_schools)
+
+# Trim data to speed up example
+catholic_schools <- catholic_schools[catholic_schools$female_mean >.45 &
+ catholic_schools$female_mean < .60,]
+
+#match on a single covariate 
+student.cov <- c('minority')
+
+match.simple <- matchMulti(catholic_schools, treatment = 'sector', 
+                             school.id = 'school', match.students = FALSE, 
+                             student.vars = student.cov, verbose=TRUE, tol=.01)
+
+#Check balance after matching - this checks both student and school balance
+balanceMulti(match.simple, student.cov = student.cov)
+	
 \dontrun{
-# Load Catholic school data
+#larger example
 data(catholic_schools)
 
 student.cov <- c('minority','female','ses')

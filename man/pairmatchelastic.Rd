@@ -36,9 +36,7 @@ The original versions of these functions were written by Paul Rosenbaum and dist
 Rosenbaum, Paul R. (2012) "Optimal Matching of an Optimally Chosen Subset in Observational Studies."  Journal of Computational and Graphical Statistics, 21.1, 57-71.
 }
 \author{
-Paul R. Rosenbaum (original form),
-  Luke Keele, Penn State University, \email{ljk20@psu.edu}
-
-  Sam Pimentel, University of Pennsylvania, \email{spi@wharton.upenn.edu}
+Paul R. Rosenbaum (original forms),
+  modifications by Luke Keele and Sam Pimentel
 }
 

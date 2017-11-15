@@ -32,21 +32,21 @@ function(df.orig, df.match = NULL, treatment, #cat.vars = NULL,
 	binary.ind <- laply(cov.orig, is.binary)
 	treat.ind <- colnames(cov.orig) == treatment
 	
-	sdiff.out <- aaply(colnames(cov.orig)[which(!treat.ind)], 1, sdiff, treatment = treatment, orig.data = cov.orig, match.data = cov.match, treat.wts = treat.wts, ctrl.wts = ctrl.wts, mt.wts = mt.wts, mc.wts = mc.wts)
+	sdiff.out <- aaply(colnames(cov.orig)[which(!treat.ind)], 1, sdiff, treatment = treatment, orig.data = cov.orig, match.data = cov.match, treat.wts = treat.wts, ctrl.wts = ctrl.wts, mt.wts = mt.wts, mc.wts = mc.wts, .drop = FALSE)
 	rownames(sdiff.out) <- colnames(cov.orig)[which(!treat.ind)]
 
-	t.test.out <- as.matrix(aaply(colnames(cov.orig)[which(!treat.ind)], 1, ttest.balance, treatment = treatment, orig.data = cov.orig, match.data = cov.match, treat.wts = treat.wts, ctrl.wts = ctrl.wts, mt.wts = mt.wts, mc.wts = mc.wts)) 
+	t.test.out <- aaply(colnames(cov.orig)[which(!treat.ind)], 1, ttest.balance, treatment = treatment, orig.data = cov.orig, match.data = cov.match, treat.wts = treat.wts, ctrl.wts = ctrl.wts, mt.wts = mt.wts, mc.wts = mc.wts, .drop = FALSE)
+	rownames(t.test.out) <-  colnames(cov.orig)[which(!treat.ind)]
 	
 	#TODO: figure out whether to keep weight arguments and incorporate them or drop them
 	
 	if(any(!binary.ind)){
-		wilc.test.out <- as.matrix(aaply(colnames(cov.orig)[which(!binary.ind & !treat.ind)], 1, wilc.balance, treatment = treatment, orig.data = cov.orig, match.data = cov.match, treat.wts = treat.wts, ctrl.wts = ctrl.wts, mt.wts = mt.wts, mc.wts = mc.wts))
-		if (sum(!binary.ind & !treat.ind) == 1) wilc.test.out <- t(wilc.test.out)
+		wilc.test.out <- aaply(colnames(cov.orig)[which(!binary.ind & !treat.ind)], 1, wilc.balance, treatment = treatment, orig.data = cov.orig, match.data = cov.match, treat.wts = treat.wts, ctrl.wts = ctrl.wts, mt.wts = mt.wts, mc.wts = mc.wts, .drop = FALSE)
 		rownames(wilc.test.out) <- colnames(cov.orig)[which(!binary.ind & !treat.ind)]
 	}
 
-	if(any(binary.ind)){
-		fisher.test.out <- as.matrix(aaply(colnames(cov.orig)[which(binary.ind & !treat.ind)], 1, fisher.balance, treatment = treatment, orig.data = cov.orig, match.data = cov.match, treat.wts = treat.wts, ctrl.wts = ctrl.wts, mt.wts = mt.wts, mc.wts = mc.wts)) 
+	if(any(binary.ind[-which(treat.ind)])){
+		fisher.test.out <- aaply(colnames(cov.orig)[which(binary.ind & !treat.ind)], 1, fisher.balance, treatment = treatment, orig.data = cov.orig, match.data = cov.match, treat.wts = treat.wts, ctrl.wts = ctrl.wts, mt.wts = mt.wts, mc.wts = mc.wts, .drop = FALSE) 
 		rownames(fisher.test.out) <- colnames(cov.orig)[which(binary.ind & !treat.ind)]
 	}
 		

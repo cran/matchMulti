@@ -20,8 +20,7 @@ A multilevel match object
 Names of student level covariates that you want to check balance
 }
   \item{school.cov}{
-Names of school level covariates that you want to check balance. If not listed balance is checked
-on all school level covariates included in the match.
+Names of school level covariates for which you want to check balance, if any.
 }
 }
 \details{
