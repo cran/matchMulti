@@ -194,6 +194,7 @@ function(students, treatment, school.id, match.students, student.vars, school.ca
 				maha.slice <- maha.mat[which(treat.idx), which(ctrl.idx),drop = FALSE]
 				min.keep <- floor((1-min.keep.pctg)*min(dim(maha.slice)))
 				match.out <- pairmatchelastic(maha.slice, n = min.keep, val = student.penalty)
+				if(is.null(match.out)) return(NULL)
 				matches.list[[t.schools[i]]][[c.schools[j]]] <- rbind(schli[as.numeric(rownames(match.out)),,drop = FALSE], schlj[match.out,,drop = FALSE])
 			} else {
 				matches.list[[t.schools[i]]][[c.schools[j]]] <- rbind(schli,schlj)
@@ -218,6 +219,7 @@ function (mdist, n = 0, val = 0) {
     k <- ro + co
     mdist <- elastic(mdist, n = n, val = val)
     m <- rcbsubset(mdist)
+	if(is.null(m)) return(NULL)
 	mt <- m
 	mt$matches <- m$matches[which(m$matches <= co),,drop=FALSE]
     mt$matches

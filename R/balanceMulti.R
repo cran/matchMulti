@@ -1,5 +1,9 @@
 balanceMulti <-
 function(match.obj, student.cov = NULL, school.cov = NULL){
+	if(is.null(match.obj)){
+		 warning('match.obj has value NULL.  Did you make sure optmatch was available before generating matched samples?')
+		return(NULL)
+	}
 	treatment <- match.obj$treatment
 	
 	#if no student covariates are provided, compute balance on all

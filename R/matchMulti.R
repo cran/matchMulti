@@ -47,8 +47,11 @@ function(data, treatment, school.id, match.students = TRUE, student.vars = NULL,
 		
 	#student matches in all school pairings	
 	student.matches <- matchStudents(students, treatment, school.id, match.students, student.vars,  school.caliper, verbose, student.penalty.qtile, min.keep.pctg)
+	if(is.null(student.matches)) return(NULL)
 
 	school.match <- matchSchools(student.matches$schools.matrix, students, treatment, school.id, school.fb, school.penalty, verbose, tol = tol) 
+
+	if(nrow(school.match))
 
 	#if keep.target is provided, iterate until we get a match that keeps (close to) the desired number of schools
 	if(!is.null(keep.target)) {
@@ -98,6 +101,8 @@ function(data, treatment, school.id, match.students = TRUE, student.vars = NULL,
 
 
 	########### OUTPUT ###########
+	
+	if(nrow(school.match) == 0) stop('No schools matched. Try lower school exclusion penalty?')
 
 	out.match <- assembleMatch(student.matches$student.matches, school.match, school.id, treatment)
 	
