@@ -22,13 +22,13 @@
 #  # A Boxplot for the size of the school
 #  ggplot(catholic_schools, aes(x=sectorf, y=size,
 #                               fill=sectorf)) +
-#    geom_boxplot() + guides(fill=FALSE) +
+#    geom_boxplot() + guides(fill="none") +
 #    xlab("") + ylab("School Enrollment")
 
 ## ----plot2, eval=FALSE---------------------------------------------------
 #  ggplot(catholic_schools, aes(x=sectorf, y=female_mean,
 #                               fill=sectorf)) +
-#    geom_boxplot() + guides(fill=FALSE) +
+#    geom_boxplot() + guides(fill="none") +
 #    xlab("") + ylab("Percentage of Female Students")
 
 ## ----trim, eval=FALSE----------------------------------------------------

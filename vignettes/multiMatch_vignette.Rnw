@@ -133,7 +133,7 @@ library(ggplot2)
 # A Boxplot for the size of the school
 ggplot(catholic_schools, aes(x=sectorf, y=size, 
                              fill=sectorf)) + 
-  geom_boxplot() + guides(fill=FALSE) + 
+  geom_boxplot() + guides(fill="none") + 
   xlab("") + ylab("School Enrollment") 
 @
 
@@ -143,7 +143,7 @@ Next, we examine the box plot for the percentage of students in each school that
 <<plot2, eval=FALSE >>=
 ggplot(catholic_schools, aes(x=sectorf, y=female_mean, 
                              fill=sectorf)) + 
-  geom_boxplot() + guides(fill=FALSE) +
+  geom_boxplot() + guides(fill="none") +
   xlab("") + ylab("Percentage of Female Students")  
 @
 
