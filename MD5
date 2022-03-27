@@ -1,4 +1,4 @@
-cf65e376c973c7a66b68afe16067ff1f *DESCRIPTION
+c301ea4ccf8f18c2e630c070a16ebc71 *DESCRIPTION
 452d77d85d34126314a6f0b76a79ad2a *LICENSE
 77ffe31974a580aaf9063ab59304e18d *NAMESPACE
 04c7fef2422837cd34cda9863298ff88 *R/balanceMulti.R
@@ -13,13 +13,13 @@ f3cfaf673971a612bd921b56e4f445f1 *R/matchMultioutcome.R
 66614163c04708e60197053ec6034104 *R/matchMultisens.R
 97bcfe8b120b25065493c07262e87a41 *R/rematchSchools.R
 d16ec11f73097c5bb190baa746c413af *R/utility_functions.R
-e0844873ce43531119e30dd3569741da *build/matchMulti.pdf
+55b9cf446be1fc81054fec8750a7d882 *build/matchMulti.pdf
 355e956bcd1367a76784abdfa0299848 *build/vignette.rds
 0aaff0bea41ce7c996c708c88e217ef2 *data/catholic_schools.RData
 3a4346f39bb12cacafc1b393ed74fe6d *data/minischool.rda
 1d87617306782721748c336c5423fc05 *inst/doc/multiMatch_vignette.R
 adefccc45746871639e70a455af133ad *inst/doc/multiMatch_vignette.Rnw
-129c0bb631e11ceb70ae8f8ced9ecd91 *inst/doc/multiMatch_vignette.pdf
+3dfd4d341a2c24d898fe02640249e689 *inst/doc/multiMatch_vignette.pdf
 262707c137b55eda0b74edae4a40abe7 *man/agg.Rd
 f3f7dec8460ac09679552fbc33b2bed2 *man/assembleMatch.Rd
 1dc3f44506821dad2f80a73d42c9d0e3 *man/balanceMulti.Rd
@@ -49,10 +49,10 @@ e6d48879cdf4f834732cd2d2f828f2d3 *man/sdiff.Rd
 00411b9446c5873e13947aaa8dff573d *man/students2schools.Rd
 cfa699dab021625f3fc7ec7c6b93ec53 *man/tally_schools.Rd
 a8e1dc3c1e91323f6a0439403c75b2c9 *tests/testthat.R
-eade54258add9d9aec9266a97df5e8de *tests/testthat/test-balanceTable.R
-8599ba442f645e068062564b77861c18 *tests/testthat/test-multilevel.R
+9785cbe477d8166f02214fb3c085e228 *tests/testthat/test-balanceTable.R
+f78850729c46eeef15ea41147be0429a *tests/testthat/test-multilevel.R
 849b59fde28e21d83305410ec6ec4c82 *tests/testthat/test-pvalues.R
-2e5bd437ce584c628dd52858421469da *tests/testthat/test-school_covs.R
+bed31a242c2c2fe4a1cd7c5d606dda8a *tests/testthat/test-school_covs.R
 c3c7f26c2e84a1eecfb3ec0c0b37159d *vignettes/asa.bst
 b1da2f3a729b46a1491364782cdb01e5 *vignettes/keele_revised2.bib
 adefccc45746871639e70a455af133ad *vignettes/multiMatch_vignette.Rnw

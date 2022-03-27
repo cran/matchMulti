@@ -1,8 +1,8 @@
 Package: matchMulti
 Type: Package
 Title: Optimal Multilevel Matching using a Network Algorithm
-Version: 1.1.9
-Date: 2022-03-02
+Version: 1.1.10
+Date: 2022-03-25
 Authors@R: c(
   person("Luke", "Keele",, "luke.keele@gmail.com", c("aut")),
   person("Luke", "Miratrix",, "luke_miratrix@gse.harvard.edu", c("aut")),
@@ -28,10 +28,10 @@ License: MIT + file LICENSE
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 NeedsCompilation: no
-Packaged: 2022-03-04 05:55:44 UTC; sdbpimentel
+Packaged: 2022-03-26 00:49:51 UTC; sdbpimentel
 Author: Luke Keele [aut],
   Luke Miratrix [aut],
   Sam Pimentel [aut, cre],
   Paul Rosenbaum [ctb]
 Repository: CRAN
-Date/Publication: 2022-03-04 11:40:16 UTC
+Date/Publication: 2022-03-27 14:50:12 UTC

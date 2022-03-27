@@ -28,26 +28,25 @@ table(  catholic_schools$sector, catholic_schools$school  )
 
 #table( catholic_schools$discrm_cut, catholic_schools$size_cut, catholic_schools$acad_cut )
 
-if (requireNamespace("optmatch", quietly = TRUE)){
-  match.simple2 <- matchMulti(catholic_schools, treatment = 'sector',
+
+match.simple2 <- matchMulti(catholic_schools, treatment = 'sector',
+                            school.id = 'school', match.students = FALSE,
+                            school.fb = list( c( "size_cut" ), c( "acad_cut" ) ) )
+
+
+
+test_that( "simple list gets packaged right", {
+  
+  # These should be the same
+  match.simpleA <- matchMulti(catholic_schools, treatment = 'sector',
                               school.id = 'school', match.students = FALSE,
-                              school.fb = list( c( "size_cut" ), c( "acad_cut" ) ) )
+                              school.fb = list( c( "discrm_cut", "acad_cut" ) ) )
   
   
+  match.simpleB <- matchMulti(catholic_schools, treatment = 'sector',
+                              school.id = 'school', match.students = FALSE,
+                              school.fb =  c( "discrm_cut", "acad_cut" ) )
   
-  test_that( "simple list gets packaged right", {
-    
-    # These should be the same
-    match.simpleA <- matchMulti(catholic_schools, treatment = 'sector',
-                                school.id = 'school', match.students = FALSE,
-                                school.fb = list( c( "discrm_cut", "acad_cut" ) ) )
-    
-    
-    match.simpleB <- matchMulti(catholic_schools, treatment = 'sector',
-                                school.id = 'school', match.students = FALSE,
-                                school.fb =  c( "discrm_cut", "acad_cut" ) )
-    
-    expect_equal( match.simpleA$school.match, match.simpleB$school.match )
-    
-  })
-}
+  expect_equal( match.simpleA$school.match, match.simpleB$school.match )
+  
+})

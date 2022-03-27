@@ -69,42 +69,40 @@ expect_true( all( fakedbl$`After Agg PValue` == fakedbl$`Before Agg PValue` ))
 
 ##### Now do matching and check balance ######
 
-if (requireNamespace("optmatch", quietly = TRUE)){
+ 
+match.simpleA <- matchMulti(minischool, treatment = 'sector',
+                            school.id = 'school', match.students = FALSE,
+                            school.fb = school.fb )
+match.simpleA
+
+
+
+test_that( "balanceMulti works", {
   
-  match.simpleA <- matchMulti(minischool, treatment = 'sector',
-                              school.id = 'school', match.students = FALSE,
-                              school.fb = school.fb )
-  match.simpleA
+  btab_split = balanceMulti( match.simpleA,
+                             school.cov = school.cov, 
+                             student.cov = student.cov )
+  btab_split
   
+  expect_true( nrow( btab_split$schools ) == 2 )
+  expect_true( nrow( btab_split$students ) == 3 )
+} )
+
+
+
+test_that( "single.table works", {
   
+  btab = balanceMulti( match.simpleA, single.table = TRUE, include.tests = TRUE )
+  btab
   
-  test_that( "balanceMulti works", {
-    
-    btab_split = balanceMulti( match.simpleA,
-                               school.cov = school.cov, 
-                               student.cov = student.cov )
-    btab_split
-    
-    expect_true( nrow( btab_split$schools ) == 2 )
-    expect_true( nrow( btab_split$students ) == 3 )
-  } )
+  btab2 = balanceMulti( match.simpleA, single.table = TRUE, include.tests = FALSE )
+  btab2
   
+  expect_equal( nrow(btab), nrow(btab2) )
+  expect_equal( dim(btab2), c( 14, 6 ) )
   
-  
-  test_that( "single.table works", {
-    
-    btab = balanceMulti( match.simpleA, single.table = TRUE, include.tests = TRUE )
-    btab
-    
-    btab2 = balanceMulti( match.simpleA, single.table = TRUE, include.tests = FALSE )
-    btab2
-    
-    expect_equal( nrow(btab), nrow(btab2) )
-    expect_equal( dim(btab2), c( 14, 6 ) )
-    
-  } )
-  
-}
+} )
+
 
 
 
