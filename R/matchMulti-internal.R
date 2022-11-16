@@ -280,6 +280,10 @@ function(matchFrame, treatFrame, ctrlFrame, student.vars, treatment, largeval){
 #' @param tol a numeric tolerance value for comparing distances.  It may need
 #' to be raised above the default when matching with many levels of refined
 #' balance.
+#' @param solver Name of package used to solve underlying network flow problem, 
+#'   one of 'rlemon' and 'rrelaxiv'.  rrelaxiv carries an 
+#'   academic license and is not hosted on CRAN so it must be installed 
+#'   separately.
 #' @return a dataframe with two columns, one containing treated school IDs and
 #' the other containing matched control school IDs.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
@@ -291,7 +295,7 @@ function(matchFrame, treatFrame, ctrlFrame, student.vars, treatment, largeval){
 #' @export matchSchools
 matchSchools <-
 function(dmat, students, treatment, school.id,
- school.fb, penalty, verbose, tol){
+ school.fb, penalty, verbose, tol, solver = 'rlemon'){
  	#DIST_TOLERANCE <- 1e-3
 	
 	balance.covs <- unique(c(unlist(school.fb)))
@@ -303,14 +307,16 @@ function(dmat, students, treatment, school.id,
 	school.df <- school.df[reord,,drop = FALSE]
 	if(is.null(school.fb)){
 		match.out <- rcbsubset::rcbsubset(dmat,
-		                       exclude.penalty = penalty, tol = tol) #	DIST_TOLERANCE)
+		                       exclude.penalty = penalty, tol = tol,
+		                       solver = solver)
 	} else {
 		match.out <- rcbsubset::rcbsubset(dmat, fb.list = school.fb, 
 		                       treated.info = school.df[school.df[[treatment]] == 1,
 		                                                ,drop = FALSE], 
 		                       control.info = school.df[school.df[[treatment]] == 0,
 		                                                ,drop = FALSE], 
-		                       exclude.penalty = penalty, tol = tol)# tol =  	DIST_TOLERANCE)
+		                       exclude.penalty = penalty, tol = tol,
+		                       solver = solver)
 	}
 	out.frame <- cbind('TreatID' = school.df[[school.id]][which(school.df[[treatment]] == 1)][as.numeric(rownames(match.out$matches))], 'CtrlID' = school.df[[school.id]][which(school.df[[treatment]] == 0)][match.out$matches])
 	

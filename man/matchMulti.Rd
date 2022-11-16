@@ -18,7 +18,8 @@ matchMulti(
   min.keep.pctg = 0.8,
   school.penalty = NULL,
   save.first.stage = TRUE,
-  tol = 0.001
+  tol = 10,
+  solver = "rlemon"
 )
 }
 \arguments{
@@ -68,9 +69,16 @@ keep when matching students in each school pair.}
 
 \item{save.first.stage}{Should first stage matches be saved.}
 
-\item{tol}{a numeric tolerance value for comparing distances.  It may need to
-be raised above the default when matching with many levels of refined
-balance.}
+\item{tol}{a numeric tolerance value for comparing distances, used in the
+school match.  It may need to be raised above the default when matching 
+with many levels of refined balance or in very large problems (when these
+distances will often be  at least on the order of the tens of 
+thousands).}
+
+\item{solver}{Name of package used to solve underlying network flow problem
+for the school match, one of 'rlemon' and 'rrelaxiv'.  rrelaxiv carries an 
+academic license and is not hosted on CRAN so it must be installed 
+separately.}
 }
 \value{
 \item{raw}{The unmatched data before matching.} \item{matched}{The

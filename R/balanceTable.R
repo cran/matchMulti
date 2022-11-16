@@ -106,7 +106,7 @@ balanceTable.internal <- function(data,
 #' @importFrom dplyr group_by summarize
 #' @importFrom rlang sym
 #' @importFrom stats coef lm pt weighted.mean
-#' @importFrom tidyr `%>%`
+#' @importFrom magrittr `%>%`
 #' @importFrom rlang .data
 #' 
 #' @references Rosenbaum, Paul R. (2002). \emph{Observational Studies}.

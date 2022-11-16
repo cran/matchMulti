@@ -1,5 +1,4 @@
 library(matchMulti)
-library(Hmisc)
 # library( testthat )
 
 context("school.fb options")

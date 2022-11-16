@@ -53,9 +53,15 @@
 #' @param school.penalty A penalty to remove groups (schools) in the group
 #'   (school) match
 #' @param save.first.stage Should first stage matches be saved.
-#' @param tol a numeric tolerance value for comparing distances.  It may need to
-#'   be raised above the default when matching with many levels of refined
-#'   balance.
+#' @param tol a numeric tolerance value for comparing distances, used in the
+#'   school match.  It may need to be raised above the default when matching 
+#'   with many levels of refined balance or in very large problems (when these
+#'   distances will often be  at least on the order of the tens of 
+#'   thousands).
+#' @param solver Name of package used to solve underlying network flow problem
+#'   for the school match, one of 'rlemon' and 'rrelaxiv'.  rrelaxiv carries an 
+#'   academic license and is not hosted on CRAN so it must be installed 
+#'   separately.
 #' @return \item{raw}{The unmatched data before matching.} \item{matched}{The
 #'   matched dataset of both units and groups. Outcome analysis and balance
 #'   checks are peformed on this item.} \item{school.match}{Object with two
@@ -148,7 +154,7 @@ matchMulti <- function(data, treatment, school.id, match.students = TRUE,
                        student.vars = NULL, school.caliper = NULL,  school.fb = NULL, 
                        verbose = FALSE, keep.target = NULL, student.penalty.qtile = 0.05,
                        min.keep.pctg = 0.8, school.penalty = NULL, save.first.stage = TRUE, 
-                       tol = 1e-3){
+                       tol = 1e1, solver = 'rlemon'){
 	
 	students <- data
 	
@@ -195,7 +201,8 @@ matchMulti <- function(data, treatment, school.id, match.students = TRUE,
 	if(is.null(student.matches)) return(NULL)
 
 	school.match <- matchSchools(student.matches$schools.matrix, students, treatment, 
-	                             school.id, school.fb, school.penalty, verbose, tol = tol) 
+	                             school.id, school.fb, school.penalty, verbose, 
+	                             tol = tol, solver = solver) 
 
 	#if keep.target is provided, iterate until we get a match that keeps (close to) the desired number of schools
 	if( nrow(school.match) > 0 && !is.null(keep.target)) {
@@ -206,14 +213,27 @@ matchMulti <- function(data, treatment, school.id, match.students = TRUE,
 		STARTVAL <- 1000
 		MAXITER <- 1000
 		SCALE_FACTOR <- 10
-		STOPRULE <- 1
 		ubound <- Inf
 		lbound <- 0
 		cur <- school.penalty
 		if (is.null(cur)) {
 			cur <- STARTVAL	
-			school.match <- matchSchools(student.matches$schools.matrix, students, treatment, 
-			                             school.id, school.fb, penalty = cur, verbose, tol = tol) 
+			school.match <- tryCatch({
+			  matchSchools(student.matches$schools.matrix, students, treatment, 
+			                             school.id, school.fb, penalty = cur, verbose, 
+			                             tol = tol, solver = solver) 
+			}, warning = function(cond){
+			  if(cond$message == 'No matched pairs formed. Try using a higher exclusion penalty?'){
+			    return.val <- suppressWarnings(matchSchools(student.matches$schools.matrix, students, treatment, 
+			                                                school.id, school.fb, cur, verbose,tol = tol,
+			                                                solver = solver) )
+			  }else{
+			    return.val <- matchSchools(student.matches$schools.matrix, students, treatment, 
+			                               school.id, school.fb, cur, verbose,tol = tol,
+			                               solver = solver) 
+			  }
+			  return(return.val)
+			})
 		} 
 		next.match <- school.match		
 		for (i in 1:MAXITER) {
@@ -240,9 +260,27 @@ matchMulti <- function(data, treatment, school.id, match.students = TRUE,
 					cur <- SCALE_FACTOR*cur
 				}
 			}
-			if(ubound - lbound < STOPRULE) break
-			next.match <- matchSchools(student.matches$schools.matrix, students, treatment, 
-			                           school.id, school.fb, cur, verbose,tol = tol) 
+			if(ubound - lbound < tol/2){
+			  print('Penalty cannot be varied at a finer resolution, terminating search.
+			        Consider using lower tolerance.')
+			  break 
+			}
+			next.match <- tryCatch({
+			  matchSchools(student.matches$schools.matrix, students, treatment, 
+			                           school.id, school.fb, cur, verbose,tol = tol,
+			                           solver = solver) 
+			  }, warning = function(cond){
+			    if(cond$message == 'No matched pairs formed. Try using a higher exclusion penalty?'){
+			      return.val <- suppressWarnings(matchSchools(student.matches$schools.matrix, students, treatment, 
+			                                                  school.id, school.fb, cur, verbose,tol = tol,
+			                                                  solver = solver) )
+			    }else{
+			     return.val <- matchSchools(student.matches$schools.matrix, students, treatment, 
+			                                      school.id, school.fb, cur, verbose,tol = tol,
+			                                      solver = solver) 
+			    }
+			    return(return.val)
+			  })
 		}
 		school.match <- next.match
 	}
