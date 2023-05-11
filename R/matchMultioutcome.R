@@ -23,7 +23,7 @@
 #' treatment effect.}
 #' @author Luke Keele, Penn State University, ljk20@@psu.edu
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @seealso See Also as \code{\link{matchMulti}}, \code{\link{matchMultisens}}
 #' @references Rosenbaum, Paul R. (2002) Observational Studies.
 #' Springer-Verlag.

@@ -19,9 +19,9 @@
 #' 
 #' \item{pval}{Upper bound on one-sided approximate p-value for test of the
 #' sharp null.}
-#' @author Luke Keele, Penn State University, ljk20@@psu.edu
+#' @author Luke Keele, University of Pennsylvania, \email{luke.keele@gmail.com}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @seealso See Also as \code{\link{matchMulti}},
 #' \code{\link{matchMultioutcome}}
 #' @references Rosenbaum, Paul R. (2002) Observational Studies.
@@ -77,27 +77,12 @@ matchMultisens <- function(obj, out.name = NULL, schl_id_name = NULL, treat.name
      q1 <- as.vector(tapply(sub.trt$ranks, sub.trt$pair.id, mean))
      q2 <- as.vector(tapply(sub.ctrl$ranks, sub.ctrl$pair.id, mean))
      ws.1 <- 1
-     d <- (sum(n.s1 + n.s2))
-     ws.2 <- (n.s1 + n.s2) /d
-    #Correction for  Multiple Testing
-    H <- matrix(NA, n.s, 2)
-    colnames(H) <- c("Constant", "Propor")
-    H[, 1] <- Q.c <- ((q1- q2))*ws.1
-    H[, 2] <- Q.p <- ((q1- q2))*ws.2
-    k <- dim(H)[2]
-    T.c <- sum(Q.c)/n.s
-    T.p <- sum(Q.p)/n.s 
-	E.s.c <- ((Gamma-1)/(n.s*(Gamma+1))) *sum(abs(Q.c))
-	E.s.p <- ((Gamma-1)/(n.s*(Gamma+1))) *sum(abs(Q.p))
-	st <- c((T.c - E.s.c), (T.p - E.s.p))
-    cv <- (4*Gamma/(n.s^2*(1+Gamma)^2)) * t(H) %*% H
-    dev <- st/sqrt(diag(cv)) 
-    bot <- 1/sqrt(outer(diag(cv), diag(cv), "*"))
-    cr <- cv * bot
-    mx <- max(dev)
-    p.sens.1 <- 1 - pmvnorm(lower = rep(-Inf, k), upper = rep(mx, k), corr = cr)
-	p.sens.2 <- pmvnorm(lower = rep(-Inf, k), upper = rep(mx, k), corr = cr)
-    pval.sens <- min(p.sens.1, p.sens.2)
+     Q.s.c <- (q1- q2)*ws.1
+     T.c <- sum(Q.s.c)/n.s
+     E.s.c <- ((Gamma-1)/(n.s*(Gamma+1))) *sum(abs(Q.s.c))
+     V.s.c <- (4*Gamma/(n.s^2*(1+Gamma)^2))*sum(Q.s.c^2)
+     dev.c <- (T.c - E.s.c)/sqrt(V.s.c)
+     pval.sens <- 1 - pnorm(dev.c)
 
     cat("Upper bound on one-sided p-value is: ", pval.sens, "\n")
     res <- list(pval=pval.sens)

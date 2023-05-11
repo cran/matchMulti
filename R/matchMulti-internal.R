@@ -12,7 +12,7 @@
 #' @return A single value of the same type as the input vector.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @keywords internal
 #' @export agg
 agg <-
@@ -45,7 +45,7 @@ function(x){
 #' multilevel match.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @keywords internal
 #' @export assembleMatch
 assembleMatch <-
@@ -56,7 +56,8 @@ function(student.matches, school.match, school.id, treatment){
 	#final.match <- final.match[-c(1:nrow(final.match)),]
 	final.match <- NULL
 	for(i in 1:nrow(school.match)){
-		bind.obj <- student.matches[[school.match[i,1]]][[school.match[i,2]]]
+		bind.obj <- student.matches[[as.character(school.match[i,1])]][[
+		  as.character(school.match[i,2])]]
 		bind.obj$pair.id <- i
 		if (is.null(final.match)) {
 			final.match <- bind.obj
@@ -126,7 +127,7 @@ fisher.balance <- function(varname, treatment, orig.data, match.data = NULL){
 #' @return a matrix containing the preprocessed data.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @references Rosenbaum, Paul R. (2010). \emph{Design of Observational
 #' Studies}.  Springer-Verlag.
 #' @keywords internal
@@ -186,7 +187,7 @@ function(X, verbose = FALSE){
 #' and \code{FALSE} otherwise.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @keywords internal
 #' @export is.binary
 is.binary <-
@@ -230,7 +231,7 @@ function(x){
 #' @return a numeric distance.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @keywords internal
 #' @export match2distance
 match2distance <-
@@ -288,7 +289,7 @@ function(matchFrame, treatFrame, ctrlFrame, student.vars, treatment, largeval){
 #' the other containing matched control school IDs.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @importFrom plyr ddply
 #' @importFrom rcbsubset rcbsubset
 #' @keywords internal
@@ -372,7 +373,7 @@ function(dmat, students, treatment, school.id,
 #' distances based on the student match. }
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @keywords internal
 #' @export matchStudents
 matchStudents <-
@@ -399,9 +400,11 @@ function(students, treatment, school.id, match.students, student.vars, school.ca
 	schoolmatch.mat <- matrix(nrow = nt.schools, ncol = nc.schools)
 	matches.list <- list()
 	for (i in 1:nt.schools) {
-		matches.list[[t.schools[i]]] <- list()
+	  t.id <- as.character(t.schools[i])
+		matches.list[[t.id]] <- list()
 		schli <- students[students[[school.id]] == t.schools[i],,drop = FALSE]
  		for (j in 1:nc.schools) {
+ 		  c.id <- as.character(c.schools[j])
 			schlj <- students[students[[school.id]] == c.schools[j],,drop = FALSE] 
 			if (match.students) {
 				#grab correct slice of maha distance
@@ -411,11 +414,11 @@ function(students, treatment, school.id, match.students, student.vars, school.ca
 				min.keep <- floor((1-min.keep.pctg)*min(dim(maha.slice)))
 				match.out <- pairmatchelastic(maha.slice, n = min.keep, val = student.penalty)
 				if(is.null(match.out)) return(NULL)
-				matches.list[[t.schools[i]]][[c.schools[j]]] <- rbind(schli[as.numeric(rownames(match.out)),,drop = FALSE], schlj[match.out,,drop = FALSE])
+				matches.list[[t.id]][[c.id]] <- rbind(schli[as.numeric(rownames(match.out)),,drop = FALSE], schlj[match.out,,drop = FALSE])
 			} else {
-				matches.list[[t.schools[i]]][[c.schools[j]]] <- rbind(schli,schlj)
+				matches.list[[t.id]][[c.id]] <- rbind(schli,schlj)
 			}
-			schoolmatch.mat[i,j] <- match2distance(matches.list[[t.schools[i]]][[c.schools[j]]], schli, schlj, student.vars, treatment, largeval = nrow(students)/2)
+			schoolmatch.mat[i,j] <- match2distance(matches.list[[t.id]][[c.id]], schli, schlj, student.vars, treatment, largeval = nrow(students)/2)
 		}
 	}
 	if(!is.null(school.caliper)) schoolmatch.mat <- schoolmatch.mat + school.caliper
@@ -488,7 +491,7 @@ pairmatchelastic <- function (mdist, n = 0, val = 0) {
 #' @return a dataframe
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @keywords internal
 #' @export resolve.cols
 resolve.cols <-
@@ -529,7 +532,7 @@ function(df1, df2){
 #' 
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #'
-#'   Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#'   Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @references Rosenbaum, Paul R. (2002). \emph{Observational Studies}.
 #'   Springer-Verlag.
 #'
@@ -632,7 +635,7 @@ function(z,X){
 #' columns in \code{school.covs} and \code{school.id}.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @keywords internal
 #' @importFrom plyr ddply colwise
 #' @export students2schools
@@ -663,7 +666,7 @@ function(students, school.cov, school.id){
 #' @return The endpoint of an estimated confidence interval.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @references Rosenbaum, Paul R. (2002). \emph{Observational Studies}.
 #' Springer-Verlag.
 #' 
@@ -720,7 +723,7 @@ ci_func <- function(beta, obj, out.name = NULL, schl_id_name = NULL, treat.name 
 #' @return A point estimate for constant-additive treatment effect.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @references Rosenbaum, Paul R. (2002). \emph{Observational Studies}.
 #' Springer-Verlag.
 #' 
@@ -772,7 +775,7 @@ pe_func <- function(beta, obj, out.name = NULL, schl_id_name = NULL, treat.name 
 #' @return A p-value for constant-additive treatment effect.
 #' @author Luke Keele, Penn State University, \email{ljk20@@psu.edu}
 #' 
-#' Sam Pimentel, University of Pennsylvania, \email{spi@@wharton.upenn.edu}
+#' Sam Pimentel, University of California, Berkeley, \email{spi@@berkeley.edu}
 #' @references Rosenbaum, Paul R. (2002). \emph{Observational Studies}.
 #' Springer-Verlag.
 #' 
