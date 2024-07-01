@@ -1,8 +1,8 @@
 Package: matchMulti
 Type: Package
 Title: Optimal Multilevel Matching using a Network Algorithm
-Version: 1.1.12
-Date: 2023-5-10
+Version: 1.1.12.1
+Date: 2023-05-10
 Authors@R: c(
   person("Luke", "Keele",, "luke.keele@gmail.com", c("aut")),
   person("Luke", "Miratrix",, "luke_miratrix@gse.harvard.edu", c("aut")),
@@ -27,12 +27,12 @@ Suggests: optmatch, testthat, knitr, rrelaxiv
 Additional_repositories: https://errickson.net/rrelaxiv/
 License: MIT + file LICENSE
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.3.1
 NeedsCompilation: no
-Packaged: 2023-05-10 22:21:37 UTC; sdbpimentel
+Packaged: 2024-07-01 09:24:03 UTC; hornik
 Author: Luke Keele [aut],
   Luke Miratrix [aut],
   Sam Pimentel [aut, cre],
   Paul Rosenbaum [ctb]
 Repository: CRAN
-Date/Publication: 2023-05-11 07:20:02 UTC
+Date/Publication: 2024-07-01 09:33:44 UTC

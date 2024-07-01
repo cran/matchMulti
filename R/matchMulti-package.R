@@ -92,13 +92,6 @@ NULL
 #' 
 #' @name matchMulti-package
 #' @docType package
-#' @author
-#' c("\\Sexpr[results=rd,stage=build]{tools:::Rd_package_author(\"#1\")}",
-#' "matchMulti")\Sexpr{tools:::Rd_package_author("matchMulti")}
-#' 
-#' Maintainer:
-#' c("\\Sexpr[results=rd,stage=build]{tools:::Rd_package_maintainer(\"#1\")}",
-#' "matchMulti")\Sexpr{tools:::Rd_package_maintainer("matchMulti")}
 #' 
 #' @seealso See also \code{\link{matchMulti}}, \code{\link{matchMultisens}},
 #' \code{\link{balanceMulti}}, \code{\link{matchMultioutcome}},

@@ -70,6 +70,6 @@ balanceMulti(match.simple, student.cov = student.cov)
 \author{
 Luke Keele, Penn State University, \email{ljk20@psu.edu}
 
-Sam Pimentel, University of Pennsylvania, \email{spi@wharton.upenn.edu}
+Sam Pimentel, University of California, Berkeley, \email{spi@berkeley.edu}
 }
 \keyword{balance}

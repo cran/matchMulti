@@ -72,11 +72,18 @@ See also \code{\link{matchMulti}}, \code{\link{matchMultisens}},
 \code{\link{rematchSchools}}
 }
 \author{
-c("\\Sexpr[results=rd,stage=build]{tools:::Rd_package_author(\"#1\")}",
-"matchMulti")\Sexpr{tools:::Rd_package_author("matchMulti")}
+\strong{Maintainer}: Sam Pimentel \email{spi@berkeley.edu}
 
-Maintainer:
-c("\\Sexpr[results=rd,stage=build]{tools:::Rd_package_maintainer(\"#1\")}",
-"matchMulti")\Sexpr{tools:::Rd_package_maintainer("matchMulti")}
+Authors:
+\itemize{
+  \item Luke Keele \email{luke.keele@gmail.com}
+  \item Luke Miratrix \email{luke_miratrix@gse.harvard.edu}
+}
+
+Other contributors:
+\itemize{
+  \item Paul Rosenbaum [contributor]
+}
+
 }
 \keyword{matchMulti}
