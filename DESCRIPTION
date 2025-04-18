@@ -1,8 +1,8 @@
 Package: matchMulti
 Type: Package
 Title: Optimal Multilevel Matching using a Network Algorithm
-Version: 1.1.12.1
-Date: 2023-05-10
+Version: 1.1.14
+Date: 2025-4-17
 Authors@R: c(
   person("Luke", "Keele",, "luke.keele@gmail.com", c("aut")),
   person("Luke", "Miratrix",, "luke_miratrix@gse.harvard.edu", c("aut")),
@@ -20,19 +20,19 @@ Description: Performs multilevel matches for data with cluster-
 	functions, may be downloaded from Github at 
 	<https://github.com/markmfredrickson/optmatch> if not available on 
 	CRAN.
-Depends: R (>= 3.2.3), rlang, dplyr
+Depends: R (>= 4.3.0), rlang, dplyr
 Imports: rcbsubset (>= 1.1.4), plyr, coin, weights, mvtnorm, MASS,
         sandwich, magrittr
 Suggests: optmatch, testthat, knitr, rrelaxiv
 Additional_repositories: https://errickson.net/rrelaxiv/
 License: MIT + file LICENSE
 VignetteBuilder: knitr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 NeedsCompilation: no
-Packaged: 2024-07-01 09:24:03 UTC; hornik
+Packaged: 2025-04-18 05:27:46 UTC; sdbpimentel
 Author: Luke Keele [aut],
   Luke Miratrix [aut],
   Sam Pimentel [aut, cre],
   Paul Rosenbaum [ctb]
 Repository: CRAN
-Date/Publication: 2024-07-01 09:33:44 UTC
+Date/Publication: 2025-04-18 05:50:02 UTC

@@ -296,7 +296,7 @@ matchMulti <- function(data, treatment, school.id, match.students = TRUE,
 	drop.obj <- list()
 	dropped.schools <- setdiff(unique(students[[school.id]]), school.match)
 	treat.table <- table(students[[school.id]], students[[treatment]])
-	treat.table <- treat.table[match(as.character(dropped.schools),rownames(treat.table)),]
+	treat.table <- treat.table[match(as.character(dropped.schools),rownames(treat.table)),,drop = FALSE]
 	drop.z <- apply(treat.table, 1, function(x) which(x >0 )-1)
 	drop.obj$schools.t <- dropped.schools[drop.z == 1]
 	drop.obj$schools.c <- dropped.schools[drop.z == 0]
